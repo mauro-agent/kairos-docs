@@ -16,7 +16,7 @@ For the past few months I've been working on RISC-V support for Kairos. I think 
 
 I've teased the progress a few times, but I never had anything concrete to actually show, until now. I want you to keep an open mind. This is a work in progress, and there are probably more rough edges than I'd like.
 
-[here place the picture I'm sharing]
+![Terminal showing a Kairos riscv64 system booted on Ubuntu 24.04, with `kubectl get nodes` reporting the node Ready as control-plane, running k3s v1.36.3](./kairos-riscv64-k3s-ready.png)
 
 As you can see, this is a Kairos system based on Ubuntu 24.04, running k3s, on riscv64. Exciting, but it's way too soon to call victory: none of this has been tested on real hardware yet. Report what breaks, and we'll work through the fixes together.
 
