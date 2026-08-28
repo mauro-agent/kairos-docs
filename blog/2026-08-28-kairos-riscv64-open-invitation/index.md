@@ -26,7 +26,9 @@ The Ubuntu base comes straight from upstream. k3s comes from [CARV-ICS-FORTH's a
 
 Worth mentioning too: [Hadron](https://kairos.io/blog/2025/12/17/introducing-hadron-the-minimal-upstream-first-linux-base-for-kairos/), the minimal, upstream-first base Kairos is moving toward, already builds and passes its own tests on riscv64 in CI. There's just no public release with it yet.
 
-## The easy path
+## Downloading the system image
+
+A quick note before you download: this isn't an official Kairos release. Kairos officially only ships Hadron-based images today, and as I mentioned, there's no official riscv64 support yet either. On top of that, the unofficial k3s build needs a few hacks bolted onto the normal `kairos-init` flow that aren't going to land in `kairos-init` itself. So for now, this image lives on my own personal repo, not an official Kairos channel.
 
 Download the ISO from the [latest release](https://github.com/mauromorales/homelab/releases/tag/kairos-riscv64-v0.1.3). Boot it (`qemu-system-riscv64`, or real riscv64 hardware if you have it) and tell me if and where it breaks, with as much detail as you can give me. We'll work through a fix together, and you can help me keep testing from there.
 
