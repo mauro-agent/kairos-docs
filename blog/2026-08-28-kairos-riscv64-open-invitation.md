@@ -2,7 +2,7 @@
 authors:
   - mauro-morales
 description: An open invitation to the RISC-V community to help test Kairos on riscv64, plus everything you need to build and boot your own image.
-slug: 2026/08/25/kairos-riscv64-open-invitation
+slug: 2026/08/28/kairos-riscv64-open-invitation
 tags:
   - kairos
 title: "Kairos on RISC-V: An Open Invitation to Test It"
