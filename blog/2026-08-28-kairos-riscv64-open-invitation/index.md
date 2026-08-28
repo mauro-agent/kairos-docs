@@ -105,8 +105,6 @@ sudo ./auroraboot --debug \
   --set "arch=riscv64"
 ```
 
-One thing worth knowing if you try this yourself: the published `quay.io/kairos/auroraboot` container has been stale for riscv64, so AuroraBoot may need building from source. The [homelab workflow](https://github.com/mauromorales/homelab/blob/main/.github/workflows/build-kairos-riscv64.yaml) that produces the official releases shows exactly how.
-
 That's it. Now you should have an image to test on your device.
 
 ## If your device boots successfully
