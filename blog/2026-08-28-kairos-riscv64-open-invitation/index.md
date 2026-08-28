@@ -1,7 +1,7 @@
 ---
 authors:
   - mauro-morales
-description: An open invitation to the RISC-V community to help test Kairos on riscv64, plus everything you need to build and boot your own image.
+description: An open invitation to the RISC-V community to help test Kairos on riscv64, plus everything you need to get an image running and installed.
 slug: 2026/08/28/kairos-riscv64-open-invitation
 tags:
   - kairos
@@ -37,72 +37,6 @@ export IMAGE=quay.io/mauromorales/kairos-riscv64:0.1.3-img
 container=$(docker create "$IMAGE" noop)   # scratch image, never executed
 docker cp "$container:/output/." .
 docker rm "$container"
-```
-
-## The long path: build your own
-
-You can choose between Debian, Ubuntu, and openSUSE. All three have been manually tested and confirmed booting on native riscv64 (see the [tracking issue](https://github.com/kairos-io/kairos/issues/4083) for the details and known rough edges, including a graphics gap right after GRUB on all three that serial console doesn't show). Fedora is trickier: there's no official Fedora riscv64 base image yet, only a community-maintained one people have used successfully for testing, so treat it as experimental on top of experimental. Details in that same tracking issue.
-
-Here's the Kairos Dockerfile I use for the Ubuntu flavor, from [my homelab repo](https://github.com/mauromorales/homelab/tree/main/nodes/kairos-riscv64). This is also where k3s gets installed manually instead of through `kairos-init`'s usual provider mechanism, exactly because it's not an upstream release yet:
-
-```dockerfile
-ARG KAIROS_INIT=latest
-
-FROM quay.io/kairos/kairos-init:${KAIROS_INIT} AS kairos-init
-FROM ubuntu:24.04 AS base-kairos
-ARG MODEL=generic
-ARG VERSION
-
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
-RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
-    /kairos-init -l debug -s install -m "${MODEL}" --version "${VERSION}" && \
-    /kairos-init -l debug -s init -m "${MODEL}" --version "${VERSION}"
-
-# k3s has no official riscv64 release yet, so this fetches CARV-ICS-FORTH's
-# fork and installs it the same way kairos-init's own k3s provider would.
-ARG K3S_RISCV64_RELEASE=20260817
-RUN curl -fL -o /usr/bin/k3s \
-        "https://github.com/CARV-ICS-FORTH/k3s/releases/download/${K3S_RISCV64_RELEASE}/k3s-riscv64" && \
-    chmod +x /usr/bin/k3s && \
-    curl -sfL https://get.k3s.io -o /tmp/k3s-install.sh && \
-    chmod +x /tmp/k3s-install.sh && \
-    INSTALL_K3S_BIN_DIR=/usr/bin \
-    INSTALL_K3S_SKIP_DOWNLOAD=true \
-    INSTALL_K3S_SKIP_ENABLE=true \
-    /tmp/k3s-install.sh && \
-    rm -f /tmp/k3s-install.sh
-```
-
-The full file has a bit more (provider-kairos wiring for the cloud-config `k3s:` stanza), all commented, in the [homelab repo](https://github.com/mauromorales/homelab/blob/main/nodes/kairos-riscv64/kairos.Dockerfile).
-
-Build it directly:
-
-```bash
-docker buildx build --platform linux/riscv64 \
-  -f kairos.Dockerfile \
-  --build-arg VERSION=0.1.0 \
-  -t kairos-riscv64:kairos --load .
-```
-
-And finally produce an ISO with [AuroraBoot](https://github.com/kairos-io/AuroraBoot):
-
-```bash
-sudo ./auroraboot --debug build-iso --arch riscv64 --output ./output/ \
-  --override-name kairos-riscv64-0.1.0 \
-  docker:kairos-riscv64:kairos
-```
-
-Or a raw disk image instead:
-
-```bash
-sudo ./auroraboot --debug \
-  --set "disable_http_server=true" \
-  --set "disable_netboot=true" \
-  --set "container_image=docker:kairos-riscv64:kairos" \
-  --set "state_dir=./output-raw" \
-  --set "disk.raw=true" \
-  --set "arch=riscv64"
 ```
 
 That's it. Now you should have an image to test on your device.
