@@ -3,7 +3,7 @@ authors:
   - mauro-morales
   - dimitris-karakasilis
 description: kairos-agent, immucore, kairos-sdk, kairos-init, and kcrypt-discovery-challenger have moved into kairos-io/kairos. Why we did it, what the new build pipeline looks like, and what actually happens to five repos' worth of git history.
-slug: 2026/08/21/one-repo-one-pipeline-one-version
+slug: 2026/08/31/one-repo-one-pipeline-one-version
 tags:
   - kairos
 title: "One Repo, One Pipeline, One Version"
